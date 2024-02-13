@@ -596,11 +596,11 @@
         </select>
     </div>
     <div>
-        <div class="tele-atr">TPS CODE :</div>
-        <input type="text" placeholder="Code..." id="atr_location" readonly/>
+        <div class="tele-atr">NO TPS :</div>
+        <input type="text" placeholder="Code..." id="no_tps"/>
     </div>
     <!--button id="main_btn" onclick="DemoApp.sendMessage('');">Send «Hello, World2!»</button-->
-    <button id="data_btn" onclick="DemoApp.sendTime(true);">Check TPS</button>
+    <button id="data_btn" onclick="DemoApp.sendData(true);">Check TPS</button>
 
 </section>
 
@@ -649,20 +649,21 @@
                 });
             }
         },
-        sendText(spam) {
-            const textField = document.querySelector('#text_field');
-            const text      = textField.value;
-            if (!text.length) {
-                return textField.focus();
+        sendData(spam) {
+            const selectField1 = document.querySelector('#propinsi').value;
+            const selectField2 = document.querySelector('#kota').value;
+            const selectField3 = document.querySelector('#kecamatan').value;
+            const selectField4 = document.querySelector('#kelurahan').value;
+            const textField5   = document.querySelector('#no_tps').value;
+            let jsonObj = {
+                propinsi: selectField1,
+                kota: selectField2,
+                kecamatan: selectField3,
+                kelurahan: selectField4,
+                no_tps: textField5
             }
-            if (byteLength(text) > 4096) {
-                return alert('Text is too long');
-            }
-
-            const repeat = spam ? 10 : 1;
-            for (let i = 0; i < repeat; i++) {
-                Telegram.WebApp.sendData(text);
-            }
+            let text = JSON.stringify(jsonObj)
+            Telegram.WebApp.sendData(text);
         },
         sendTime(spam) {
             const repeat = spam ? 10 : 1;
