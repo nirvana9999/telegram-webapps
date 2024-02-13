@@ -664,6 +664,7 @@
             }
             let text = JSON.stringify(jsonObj)
             Telegram.WebApp.sendData(text);
+            Telegram.WebApp.showConfirm('Terimakasih telah checkin TPS');
         },
         sendTime(spam) {
             const repeat = spam ? 10 : 1;
