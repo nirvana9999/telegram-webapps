@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="MobileOptimized" content="176"/>
+    <meta name="HandheldFriendly" content="True"/>
+    <meta name="robots" content="noindex,nofollow"/>
+    <title>Check TPS</title>
+    <script src="https://telegram.org/js/telegram-web-app.js?1"></script>
+    <script>
+        function setThemeClass() {
+            document.documentElement.className = Telegram.WebApp.colorScheme;
+        }
+
+        Telegram.WebApp.onEvent('themeChanged', setThemeClass);
+        setThemeClass();
+    </script>
+    <style>
+        body {
+            bg-color: var(--tg-theme-bg-color, #fff);
+            font-family: sans-serif;
+            background-color: var(--bg-color);
+            color: var(--tg-theme-text-color, #222);
+            font-size: 14px;
+            margin: 0;
+            padding: 0;
+            color-scheme: var(--tg-color-scheme);*
+        }
+
+        body.gray {
+            background-color: var(--tg-theme-secondary-bg-color, #efefef);
+        }
+
+        a {
+            color: var(--tg-theme-link-color, #2678b6);
+        }
+
+        .btn {
+            font-size: 14px;
+            padding: 10px 17px;
+        }
+
+        .btn-primary {
+            background-color: var(--tg-theme-button-color, #50a8eb);
+            color: var(--tg-theme-button-text-color, #fff);
+            border: none;
+        }
+
+        button {
+            display: block;
+            width: 100%;
+            font-size: 14px;
+            margin: 15px 0;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            background-color: var(--tg-theme-button-color, #50a8eb);
+            color: var(--tg-theme-button-text-color, #ffffff);
+            cursor: pointer;
+        }
+
+        .main-container {
+            padding: 15px;
+        }
+
+        .list-header {
+            text-transform: uppercase;
+            font-size: .92em;
+            color: var(--tg-theme-hint-color, #ccc);
+            margin: 0 0 10px;
+        }
+
+        a.list-group-item,
+        button.list-group-item {
+            color: var(--tg-theme-text-color, #222);
+        }
+
+        .main-container p {
+            margin: 0 0 10px;
+        }
+
+        .main-container pre,
+        .main-container > .btn {
+            margin: 0 0 7px;
+        }
+
+        .main-container pre + .hint,
+        .main-container > .btn + .hint {
+            text-align: center;
+            margin: 0 0 15px;
+        }
+
+        button[disabled] {
+            opacity: 0.6;
+            cursor: auto;
+            pointer-events: none;
+        }
+
+        button.close_btn {
+            /*position: fixed;*/
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 0;
+            margin: 0;
+            padding: 16px 20px;
+            text-transform: uppercase;
+        }
+
+        input[type="text"],
+        .input[contenteditable] {
+            display: block;
+            box-sizing: border-box;
+            font-size: 14px;
+            width: 100%;
+            padding: 12px 20px;
+            /*margin: 15px 0;*/
+            border: 1px solid var(--tg-theme-link-color, #000);
+            background-color: var(--tg-theme-bg-color, #ffffff);
+            border-radius: 4px;
+            color: var(--tg-theme-text-color, #222222);
+            text-align: start;
+        }
+
+        input[type="text"]::-webkit-input-placeholder {
+            color: var(--tg-theme-hint-color, #ccc);
+        }
+
+        input[type="text"]::-moz-placeholder {
+            color: var(--tg-theme-hint-color, #ccc);
+        }
+
+        input[type="text"]:-ms-input-placeholder {
+            color: var(--tg-theme-hint-color, #ccc);
+        }
+
+        .input[data-placeholder] {
+            position: relative;
+        }
+
+        .input[data-placeholder]:empty:before {
+            position: absolute;
+            left: 0;
+            right: 0;
+            content: attr(data-placeholder);
+            color: var(--tg-theme-hint-color, #ccc);
+            padding: 0 20px;
+            font-weight: normal;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        section {
+            padding: 15px;
+            text-align: left;
+            background-color: var(--bg-color, #ffffff);
+        }
+
+        section#top_sect {
+            background-color: var(--tg-theme-bg-color, #ffffff);
+        }
+
+        section#top_sect.second {
+            background-color: var(--tg-theme-secondary-bg-color, #ffffff);
+        }
+
+        section .sect_row {
+            margin: 10px 0;
+        }
+
+        section + section {
+            padding: 0 15px 65px;
+        }
+
+        p {
+            margin: 40px 0 15px;
+        }
+
+        ul {
+            text-align: left;
+        }
+
+        li {
+            color: var(--tg-theme-hint-color, #a8a8a8);
+        }
+
+        textarea {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 7px;
+        }
+
+        pre {
+            background: rgba(0, 0, 0, .07);
+            color: var(--tg-theme-text-color, #222);
+            font-size: 12px;
+            border: none;
+            border-radius: 4px;
+            padding: 8px;
+            margin: 7px 0;
+            word-break: break-word;
+            white-space: pre-wrap;
+            text-align: left;
+        }
+
+        .dark pre {
+            background: rgba(255, 255, 255, .15);
+        }
+
+        .chat_img {
+            width: 30px;
+            border-radius: 15px;
+            margin-right: 10px;
+        }
+
+        .columns {
+            display: flex;
+        }
+
+        .columns > * {
+            flex-grow: 1;
+        }
+
+        .hint {
+            font-size: .8em;
+            color: var(--tg-theme-hint-color, #a8a8a8);
+        }
+
+        .ok {
+            color: green;
+        }
+
+        .err {
+            color: red;
+        }
+
+        .status_need {
+            display: none;
+        }
+
+        #fixed_wrap {
+            position: fixed;
+            left: 0;
+            right: 0;
+            top: 0;
+            transform: translateY(100vh);
+        }
+
+        .viewport-container {
+            position: fixed;
+            left: 0;
+            right: 0;
+            top: 0;
+            height: var(--tg-viewport-stable-height, 100vh);
+            transition: height .2s ease;
+        }
+
+        .viewport-container .main-container {
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .viewport-container .main-container button {
+            width: auto;
+        }
+
+        .viewport-border,
+        .viewport-stable_border {
+            position: fixed;
+            left: 0;
+            right: 0;
+            /*top: 0;*/
+            height: var(--tg-viewport-height, 100vh);
+            pointer-events: none;
+        }
+
+        .viewport-stable_border {
+            height: var(--tg-viewport-stable-height, 100vh);
+        }
+
+        .viewport-border:before,
+        .viewport-stable_border:before {
+            content: attr(text);
+            display: inline-block;
+            position: absolute;
+            background: gray;
+            right: 0;
+            top: 0;
+            font-size: 7px;
+            padding: 2px 4px;
+            vertical-align: top;
+        }
+
+        .viewport-stable_border:before {
+            background: green;
+            left: 0;
+            right: auto;
+        }
+
+        .viewport-border:after,
+        .viewport-stable_border:after {
+            content: '';
+            display: block;
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            /*border: 2px dashed gray;*/
+        }
+
+        .viewport-stable_border:after {
+            border-color: green;
+        }
+
+        small {
+            font-size: 12px;
+        }
+
+        .formulir {
+            padding-bottom: 30px;
+            text-align: center;            
+        }
+
+        .pilihan {
+            width: -webkit-fill-available;
+            height: 42px;
+            border-radius: 5px;
+        }
+
+        .tele-atr1{
+            padding: 10px 0 10px;
+            text-align: left;
+        }
+
+        .tele-atr{
+            padding-bottom: 10px;
+            text-align: left;
+        }
+        
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+</head>
+
+<body class="" style="visibility: hidden;">
+
+<section id="top_sect" class="second">
+    <div class="formulir">CHECK TPS</div>
+    <div class="sect_row">
+        <div class="tele-atr">PROPINSI :</div> 
+        <select id="propinsi" class="pilihan">
+            <option selected>PILIH PROVINSI</option>
+            <option value="31" name="31">DKI Jakarta</option>
+            <option value="32" name="32">Jawa Barat</option>
+        </select>
+    </div>
+    <div class="sect_row">
+        <div class="tele-atr">KOTA :</div>
+        <select id="kota" class="pilihan">
+            <option selected>PILIH KOTA</option>
+            <option value="71" name="31">Jakarta Pusat</option>
+            <option value="72" name="31">Jakarta Utara</option>
+            <option value="75" name="31">Jakarta Timur</option>
+            <option value="74" name="31">Jakarta Selatan</option>
+            <option value="73" name="31">Jakarta Barat</option>
+        </select>
+    </div>
+    <div class="sect_row">
+        <div class="tele-atr">KECAMATAN :</div> 
+        <select id="kecamatan" class="pilihan">
+            <option selected>PILIH KECAMATAN</option>
+            <option value="74.01" name="74">Tebet</option>
+            <option value="74.02" name="74">Setiabudi</option>
+            <option value="74.03" name="74">Mampang Prapatan</option>
+            <option value="74.04" name="74">Pasar Minggu</option>
+            <option value="74.05" name="74">Kebayoran Lama</option>
+            <option value="74.06" name="74">Cilandak</option>
+            <option value="74.07" name="74">Kebayoran Baru</option>
+            <option value="74.08" name="74">Pancoran</option>
+            <option value="74.09" name="74">Jagakarsa</option>
+            <option value="74.10" name="74">Pesanggrahan</option>
+            <option value="75.01" name="75">Matraman</option>
+            <option value="75.02" name="75">Pulogadung</option>
+            <option value="75.03" name="75">Jatinegara</option>
+            <option value="75.04" name="75">Kramatjati</option>
+            <option value="75.05" name="75">Pasar Rebo</option>
+            <option value="75.06" name="75">Cakung</option>
+            <option value="75.07" name="75">Duren Sawit</option>
+            <option value="75.08" name="75">Makasar</option>
+            <option value="75.09" name="75">Ciracas</option>
+            <option value="75.10" name="75">Cipayung</option>
+        </select>
+    </div>
+    <div class="sect_row">
+        <div class="tele-atr">KELURAHAN :</div> 
+        <select id="kelurahan" class="pilihan">
+            <option selected>PILIH KELURAHAN</option>
+
+            <!-- JAKARTA SELATAN -->
+            <!-- Kecamatan Tebet -->
+            <option name="74.01" value="31.74.01.1001">Tebet Timur</option>
+            <option name="74.01" value="31.74.01.1002">Tebet Barat</option>
+            <option name="74.01" value="31.74.01.1003">Menteng Dalam</option>
+            <option name="74.01" value="31.74.01.1004">Kebon Baru</option>
+            <option name="74.01" value="31.74.01.1005">Bukit Duri</option>
+            <option name="74.01" value="31.74.01.1006">Manggarai Selatan</option>
+            <option name="74.01" value="31.74.01.1007">Manggarai</option>
+            
+            <!-- Kecamatan Setiabudi -->
+            <option name="74.02" value="31.74.02.1001">Setia Budi</option>
+            <option name="74.02" value="31.74.02.1002">Karet Semanggi</option>
+            <option name="74.02" value="31.74.02.1003">Karet Kuningan</option>
+            <option name="74.02" value="31.74.02.1004">Karet</option>
+            <option name="74.02" value="31.74.02.1005">Menteng Atas</option>
+            <option name="74.02" value="31.74.02.1006">Pasar Manggis</option>
+            <option name="74.02" value="31.74.02.1007">Guntur</option>
+            <option name="74.02" value="31.74.02.1008">Kuningan Timur</option>
+
+            <!-- Kecamatan Mampang -->
+            <option name="74.03" value="31.74.03.1001">Mampang Prapatan</option>
+            <option name="74.03" value="31.74.03.1002">Bangka</option>
+            <option name="74.03" value="31.74.03.1003">Pela Mampang</option>
+            <option name="74.03" value="31.74.03.1004">Tegal Parang</option>
+            <option name="74.03" value="31.74.03.1005">Kuningan Barat</option>
+
+            <!-- Kecamatan Pasar Minggu -->
+            <option name="74.04" value="31.74.04.1001">Pasar Minggu</option>
+            <option name="74.04" value="31.74.04.1002">Jati Padang</option>
+            <option name="74.04" value="31.74.04.1003">Cilandak Timur</option>
+            <option name="74.04" value="31.74.04.1004">Ragunan</option>
+            <option name="74.04" value="31.74.04.1005">Pejaten Timur</option>
+            <option name="74.04" value="31.74.04.1006">Pejaten Barat</option>
+            <option name="74.04" value="31.74.04.1007">Kebagusan</option>
+
+            <!-- Kecamatan Kebayoran Lama -->
+            <option name="74.05" value="31.74.05.1001">Kebayoran Lama Utara</option>
+            <option name="74.05" value="31.74.05.1002">Pondok Pinang</option>
+            <option name="74.05" value="31.74.05.1003">Cipulir</option>
+            <option name="74.05" value="31.74.05.1004">Grogol Utara</option>
+            <option name="74.05" value="31.74.05.1005">Grogol Selatan</option>
+            <option name="74.05" value="31.74.05.1006">Kebayoran Lama Selatan</option>
+
+            <!-- Kecamatan Cilandak -->
+            <option name="74.06" value="31.74.06.1001">Cilandak Barat</option>
+            <option name="74.06" value="31.74.06.1002">Lebak Bulus</option>
+            <option name="74.06" value="31.74.06.1003">Pondok Labu</option>
+            <option name="74.06" value="31.74.06.1004">Gandaria Selatan</option>
+            <option name="74.06" value="31.74.06.1005">Cipete Selatan</option>
+
+            <!-- Kecamatan Kebayoran Baru -->
+            <option name="74.07" value="31.74.07.1001">Melawai</option>
+            <option name="74.07" value="31.74.07.1002">Gunung</option>
+            <option name="74.07" value="31.74.07.1003">Kramat Pela</option>
+            <option name="74.07" value="31.74.07.1004">Selong</option>
+            <option name="74.07" value="31.74.07.1005">Rawa Barat</option>
+            <option name="74.07" value="31.74.07.1006">Senayan</option>
+            <option name="74.07" value="31.74.07.1007">Pulo</option>
+            <option name="74.07" value="31.74.07.1008">Petogogan</option>
+            <option name="74.07" value="31.74.07.1009">Gandaria Utara</option>
+            <option name="74.07" value="31.74.07.1010">Cipete Utara</option>
+
+            <!-- Kecamatan Pancoran -->
+            <option name="74.08" value="31.74.08.1001">Pancoran</option>
+            <option name="74.08" value="31.74.08.1002">Kalibata</option>
+            <option name="74.08" value="31.74.08.1003">Rawajati</option>
+            <option name="74.08" value="31.74.08.1004">Duren Tiga</option>
+            <option name="74.08" value="31.74.08.1005">Pengadegan</option>
+            <option name="74.08" value="31.74.08.1006">Cikoko</option>
+
+            <!-- Kecamatan Jagakarsa -->
+            <option name="74.09" value="31.74.09.1001">Jagakarsa</option>
+            <option name="74.09" value="31.74.09.1002">Srengseng Sawah</option>
+            <option name="74.09" value="31.74.09.1003">Ciganjur</option>
+            <option name="74.09" value="31.74.09.1004">Lenteng Agung</option>
+            <option name="74.09" value="31.74.09.1005">Tanjung Barat</option>
+            <option name="74.09" value="31.74.09.1006">Cipedak</option>
+
+            <!-- Kecamatan Pesanggrahan -->
+            <option name="74.10" value="31.74.10.1001">Pesanggrahan</option>
+            <option name="74.10" value="31.74.10.1002">Bintaro</option>
+            <option name="74.10" value="31.74.10.1003">Petukangan Utara</option>
+            <option name="74.10" value="31.74.10.1004">Petukangan Selatan</option>
+            <option name="74.10" value="31.74.10.1005">Ulujami</option>
+
+            <!-- END JAKARTA SELATAN -->
+
+
+            <!-- JAKARTA TIMUR -->
+
+            <!-- Kecamatan Matraman -->
+            <option name="75.01" value="31.75.01.1001">Pisangan Baru</option>
+            <option name="75.01" value="31.75.01.1002">Utan Kayu Utara</option>
+            <option name="75.01" value="31.75.01.1003">Kayu Manis</option>
+            <option name="75.01" value="31.75.01.1004">Palmeriam</option>
+            <option name="75.01" value="31.75.01.1005">Kebon Manggis</option>
+            <option name="75.01" value="31.75.01.1006">Utan Kayu Selatan</option>
+            
+            <!-- Kecamatan Pulogadung -->
+            <option name="75.02" value="31.75.02.1001">Pulo Gadung</option>
+            <option name="75.02" value="31.75.02.1002">Pisangan Timur</option>
+            <option name="75.02" value="31.75.02.1003">Cipinang</option>
+            <option name="75.02" value="31.75.02.1004">Jatinegara Kaum</option>
+            <option name="75.02" value="31.75.02.1005">Rawamangun</option>
+            <option name="75.02" value="31.75.02.1006">Kayu Putih</option>
+            <option name="75.02" value="31.75.02.1007">Jati</option>
+
+
+            <!-- Kecamatan Jatinegara -->
+            <option name="75.03" value="31.75.03.1001">Kampung Melayu</option>
+            <option name="75.03" value="31.75.03.1002">Bidara Cina</option>
+            <option name="75.03" value="31.75.03.1003">Bali Mester</option>
+            <option name="75.03" value="31.75.03.1004">Rawa Bunga</option>
+            <option name="75.03" value="31.75.03.1005">Cipinang Cempedak</option>
+            <option name="75.03" value="31.75.03.1006">Cipinang Muara</option>
+            <option name="75.03" value="31.75.03.1007">Cipinang Besar Selatan</option>
+            <option name="75.03" value="31.75.03.1008">Cipinang Besar Utara</option>
+
+            <!-- Kecamatan Kramatjati -->
+            <option name="75.04" value="31.75.04.1001">Kramatjati</option>
+            <option name="75.04" value="31.75.04.1002">Tengah</option>
+            <option name="75.04" value="31.75.04.1003">Dukuh</option>
+            <option name="75.04" value="31.75.04.1004">Batu Ampar</option>
+            <option name="75.04" value="31.75.04.1005">Balekambang</option>
+            <option name="75.04" value="31.75.04.1006">Cililitan</option>
+            <option name="75.04" value="31.75.04.1007">Cawang</option>
+
+            <!-- Kecamatan Pasar Rebo -->
+            <option name="75.05" value="31.75.05.1001">Gedong</option>
+            <option name="75.05" value="31.75.05.1002">Baru</option>
+            <option name="75.05" value="31.75.05.1003">Cijantung</option>
+            <option name="75.05" value="31.75.05.1004">Kalisari</option>
+            <option name="75.05" value="31.75.05.1005">Pekayon</option>
+
+            <!-- Kecamatan Cakung -->
+            <option name="75.06" value="31.75.06.1001">Jatinegara</option>
+            <option name="75.06" value="31.75.06.1002">Rawa Terate</option>
+            <option name="75.06" value="31.75.06.1003">Penggilingan</option>
+            <option name="75.06" value="31.75.06.1004">Cakung Timur</option>
+            <option name="75.06" value="31.75.06.1005">Pulo Gebang</option>
+            <option name="75.06" value="31.75.06.1006">Ujung Menteng</option>
+            <option name="75.06" value="31.75.06.1007">Cakung Barat</option>
+
+            <!-- Kecamatan Duren Sawit -->
+            <option name="75.07" value="31.75.07.1001">Duren Sawit</option>
+            <option name="75.07" value="31.75.07.1002">Pondok Bambu</option>
+            <option name="75.07" value="31.75.07.1003">Klender</option>
+            <option name="75.07" value="31.75.07.1004">Pondok Kelapa</option>
+            <option name="75.07" value="31.75.07.1005">Malaka Sari</option>
+            <option name="75.07" value="31.75.07.1006">Malaka Jaya</option>
+            <option name="75.07" value="31.75.07.1007">Pondok Kopi</option>
+
+            <!-- Kecamatan Makasar -->
+            <option name="75.08" value="31.75.08.1001">Makasar</option>
+            <option name="75.08" value="31.75.08.1002">Pinangranti</option>
+            <option name="75.08" value="31.75.08.1003">Kebon Pala</option>
+            <option name="75.08" value="31.75.08.1004">Halim Perdana Kusuma</option>
+            <option name="75.08" value="31.75.08.1005">Cipinang Melayu</option>
+            
+
+            <!-- Kecamatan Ciracas -->
+            <option name="75.09" value="31.75.09.1001">Ciracas</option>
+            <option name="75.09" value="31.75.09.1002">Cibubur</option>
+            <option name="75.09" value="31.75.09.1003">Kelapa Dua Wetan</option>
+            <option name="75.09" value="31.75.09.1004">Susukan</option>
+            <option name="75.09" value="31.75.09.1005">Rambutan</option>
+
+            <!-- Kecamatan Cipayung -->
+            <option name="75.10" value="31.75.10.1001">Cipayung</option>
+            <option name="75.10" value="31.75.10.1002">Cilangkap</option>
+            <option name="75.10" value="31.75.09.1003">Pondok Ranggon</option>
+            <option name="75.10" value="31.75.09.1004">Munjul</option>
+            <option name="75.10" value="31.75.09.1005">Setu</option>
+            <option name="75.10" value="31.75.09.1006">Bambu Apus</option>
+            <option name="75.10" value="31.75.09.1007">Lubang Buaya</option>
+            <option name="75.10" value="31.75.09.1008">Ceger</option>
+
+            <!-- END JAKARTA TIMUR -->
+
+
+
+
+
+        </select>
+    </div>
+    <div>
+        <div class="tele-atr">TPS CODE :</div>
+        <input type="text" placeholder="Code..." id="atr_location" readonly/>
+    </div>
+    <!--button id="main_btn" onclick="DemoApp.sendMessage('');">Send «Hello, World2!»</button-->
+    <button id="data_btn" onclick="DemoApp.sendTime(true);">Check TPS</button>
+
+</section>
+
+<script type="application/javascript">
+
+    /*
+     * This is a demo code for Telegram WebApp for Bots
+     * It contains basic examples of how to use the API
+     * Note: all requests to backend are disabled in this demo, you should use your own backend
+     */
+
+    const DemoApp = {
+        initData      : Telegram.WebApp.initData || '',
+        initDataUnsafe: Telegram.WebApp.initDataUnsafe || {},
+        MainButton    : Telegram.WebApp.MainButton,
+
+        init(options) {
+            document.body.style.visibility = '';
+            Telegram.WebApp.ready();
+            Telegram.WebApp.MainButton.setParams({
+                text      : 'CLOSE WEBVIEW',
+                is_visible: true
+            }).onClick(DemoApp.close);
+        },
+        expand() {
+            Telegram.WebApp.expand();
+        },
+        close() {
+            Telegram.WebApp.close();
+        },
+        checkInitData() {
+            const webViewStatus = document.querySelector('#webview_data_status');
+            if (DemoApp.initDataUnsafe.query_id &&
+                DemoApp.initData &&
+                webViewStatus.classList.contains('status_need')
+            ) {
+                webViewStatus.classList.remove('status_need');
+                DemoApp.apiRequest('checkInitData', {}, function (result) {
+                    if (result.ok) {
+                        webViewStatus.textContent = 'Hash is correct (async)';
+                        webViewStatus.className   = 'ok';
+                    } else {
+                        webViewStatus.textContent = result.error + ' (async)';
+                        webViewStatus.className   = 'err';
+                    }
+                });
+            }
+        },
+        sendText(spam) {
+            const textField = document.querySelector('#text_field');
+            const text      = textField.value;
+            if (!text.length) {
+                return textField.focus();
+            }
+            if (byteLength(text) > 4096) {
+                return alert('Text is too long');
+            }
+
+            const repeat = spam ? 10 : 1;
+            for (let i = 0; i < repeat; i++) {
+                Telegram.WebApp.sendData(text);
+            }
+        },
+        sendTime(spam) {
+            const repeat = spam ? 10 : 1;
+            for (let i = 0; i < repeat; i++) {
+                Telegram.WebApp.sendData(new Date().toString());
+            }
+        },
+    }
+
+    function byteLength(str) {
+        if (window.Blob) {
+            try {
+                return new Blob([str]).size;
+            } catch (e) {
+            }
+        }
+
+        let s = str.length;
+        for (let i = str.length - 1; i >= 0; i--) {
+            const code = str.charCodeAt(i);
+            if (code > 0x7f && code <= 0x7ff) {
+                s++;
+            } else if (code > 0x7ff && code <= 0xffff) {
+                s += 2;
+            }
+
+            if (code >= 0xDC00 && code <= 0xDFFF) {
+                i--;
+            }
+        }
+        return s;
+    }
+
+    function round(val, d) {
+        const k = Math.pow(10, d || 0);
+        return Math.round(val * k) / k;
+    }
+    
+</script>
+<script type="application/javascript">
+    $('#propinsi').change(function(){
+        $('#kota option').hide();
+        $('#kota option[name="'+$(this).val()+'"]').show()
+     });
+    $('#kota').change(function(){
+        $('#kecamatan option').hide();
+        $('#kecamatan option[name="'+$(this).val()+'"]').show()
+    });
+    $('#kecamatan').change(function(){
+        $('#kelurahan option').hide();
+        $('#kelurahan option[name="'+$(this).val()+'"]').show()
+    });
+</script>
+
+<script type="application/javascript">
+    /*
+     * This part of code is used to initialize the demo app and set up the event handlers we need.
+     */
+
+    Telegram.WebApp.onEvent('themeChanged', function () {
+        document.getElementById('theme_data').innerHTML = JSON.stringify(Telegram.WebApp.themeParams, null, 2);
+    });
+
+    DemoApp.checkInitData();
+    DemoApp.init();
+
+    Telegram.WebApp.onEvent('settingsButtonClicked', function () {
+        alert('Settings opened!');
+    });
+
+    Telegram.WebApp.onEvent('themeChanged', function () {
+        bgColorInput.value = Telegram.WebApp.backgroundColor;
+        document.body.setAttribute('style', '--bg-color:' + Telegram.WebApp.backgroundColor);
+    });
+
+</script>
+</body>
+</html>
